@@ -11,7 +11,7 @@ public class PracToonApplication {
 
 	@RequestMapping("/")
 	String home() {
-		return "Hello World! World! World! World! World!";
+		return "Hello HelloHelloHelloHelloHello";
 	}
 
 	public static void main(String[] args) {
