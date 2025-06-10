@@ -1,0 +1,58 @@
+version: '3.8' # Docker Compose 파일 형식 버전 (최신 권장)
+
+services:
+  # 1. Spring Boot 애플리케이션 서비스 정의 (이름: myapp)
+  myapp:
+    build:
+      context: . # 현재 디렉토리(프로젝트 루트)에서 Dockerfile을 찾음
+      dockerfile: Dockerfile # Dockerfile 이름 지정 (생략 가능하지만 명시적)
+    ports:
+      - "80:8080" # 호스트(로컬 PC)의 80번 포트를 컨테이너의 8080번 포트로 연결 (Spring Boot 기본 포트)
+      # 필요에 따라 "8080:8080" 등으로 변경 가능
+    environment:
+      # Spring Boot 애플리케이션의 데이터베이스 연결 정보 (환경 변수로 설정)
+      # application.yml의 설정을 오버라이드합니다.
+      # 여기서 'db'는 아래에서 정의할 MySQL 서비스의 이름입니다.
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/mydb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_USERNAME: root # 실제 사용할 사용자 이름으로 변경하세요
+      SPRING_DATASOURCE_PASSWORD: 1234 # 실제 사용할 비밀번호로 변경하세요
+
+      # JPA DDL-Auto 설정 (선택 사항, 개발 환경에서만 update/create 사용 권장)
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: true
+
+    depends_on:
+      - db # 'db' 서비스가 먼저 시작될 때까지 기다립니다.
+        # 하지만 'db' 컨테이너가 완전히 준비될 때까지 기다리는 것은 아님.
+      # 애플리케이션 내부에 DB 연결 재시도 로직이 있어야 안정적.
+
+    # 컨테이너 재시작 정책 (선택 사항)
+    restart: unless-stopped # 컨테이너가 에러로 종료되거나 명시적으로 중지하지 않는 한 항상 재시작
+
+  # 2. MySQL 데이터베이스 서비스 정의 (이름: db)
+  db:
+    image: mysql:8.0 # Docker Hub에서 MySQL 8.0 이미지를 사용
+    ports:
+      - "3306:3306" # 호스트의 3306번 포트를 컨테이너의 3306번 포트로 연결 (로컬에서 MySQL 클라이언트로 접근 시 유용)
+    environment:
+      # MySQL 초기 설정 환경 변수 (최초 컨테이너 실행 시 적용)
+      MYSQL_ROOT_PASSWORD: 1234 # 루트 계정 비밀번호 (myapp의 SPRING_DATASOURCE_PASSWORD와 일치시켜야 함)
+      MYSQL_DATABASE: mydb # 초기 생성될 데이터베이스 이름 (myapp의 SPRING_DATASOURCE_URL과 일치시켜야 함)
+      # MYSQL_USER: your_db_user # 특정 사용자 계정을 만들려면 정의 (root 사용 시 생략 가능)
+      # MYSQL_PASSWORD: your_db_password # 특정 사용자 계정 비밀번호 (root 사용 시 생략 가능)
+
+    # 데이터 지속성을 위한 볼륨 마운트
+    # MySQL 데이터가 컨테이너가 삭제되어도 유지되도록 호스트 머신의 볼륨에 저장
+    volumes:
+      - db_data:/var/lib/mysql # 'db_data'라는 이름의 Docker 볼륨 사용
+
+    # MySQL 8.0 인증 플러그인 문제 시 (선택 사항, 필요할 경우 주석 해제)
+    # command: --default-authentication-plugin=mysql_native_password
+
+    # 컨테이너 재시작 정책 (선택 사항)
+    restart: unless-stopped # 컨테이너가 에러로 종료되거나 명시적으로 중지하지 않는 한 항상 재시작
+
+# Docker 볼륨 정의
+# 'db_data' 볼륨은 MySQL 데이터가 영구적으로 저장될 공간을 제공합니다.
+volumes:
+  db_data:
