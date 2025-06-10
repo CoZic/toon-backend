@@ -14,6 +14,10 @@ COPY build.gradle settings.gradle ./
 # 소스 코드 복사 (src 디렉토리 포함)
 COPY src ./src
 
+# --- 이 부분 추가 ---
+# gradlew 스크립트에 실행 권한 부여
+RUN chmod +x gradlew
+
 # Gradle (또는 Maven)을 사용하여 애플리케이션 빌드
 # 여기서 .jar 파일이 생성됩니다.
 # 정확한 빌드 명령어와 jar 파일 생성 경로를 확인하세요.
