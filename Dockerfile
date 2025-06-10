@@ -23,7 +23,7 @@ RUN ./gradlew build --no-daemon
 
 # Stage 2: 런타임 스테이지
 # Java 17 JRE만 포함된 경량 이미지 사용 (최종 이미지 크기 감소)
-FROM openjdk:17-jre-slim
+FROM openjdk:17
 
 # 작업 디렉토리 설정 (옵션)
 WORKDIR /app
