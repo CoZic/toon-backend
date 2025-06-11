@@ -12,11 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 public class PracToonApplication {
 
-	@RequestMapping("/")
-	String home() {
-		return "Hello HelloHelloHelloHelloHello";
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(PracToonApplication.class, args);
 	}
