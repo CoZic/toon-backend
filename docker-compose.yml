@@ -6,7 +6,7 @@ services:
       context: . # Dockerfile이 위치한 경로 (현재 디렉토리)
       dockerfile: Dockerfile # 사용할 Dockerfile 이름
     ports:
-      - "80:8080" # 호스트(로컬PC)의 80번 포트를 컨테이너의 8080번 포트에 연결
+      - "5000:8080" # 호스트(로컬PC)의 80번 포트를 컨테이너의 8080번 포트에 연결
       # 만약 localhost:5000으로 하고 싶다면 "- "5000:8080""으로 변경
     environment: # 컨테이너 내부에서 사용할 환경 변수 (Spring Boot의 application.yml 설정 오버라이드)
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/mydb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul
