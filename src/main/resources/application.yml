@@ -1,15 +1,15 @@
 spring:
-  datasource:
-    # Docker Compose 서비스 이름 'db'를 사용하도록 변경
-    url: jdbc:mysql://db:3306/mydb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul
-    username: root # docker-compose.yml의 MYSQL_USER 또는 MYSQL_ROOT_PASSWORD와 일치
-    password: 1234 # docker-compose.yml의 MYSQL_PASSWORD 또는 MYSQL_ROOT_PASSWORD와 일치
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    datasource:
+        # Docker Compose 서비스 이름 'db'를 사용하도록 변경
+        url: jdbc:mysql://db:3306/mydb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul
+        username: root # docker-compose.yml의 MYSQL_USER 또는 MYSQL_ROOT_PASSWORD와 일치
+        password: 1234 # docker-compose.yml의 MYSQL_PASSWORD 또는 MYSQL_ROOT_PASSWORD와 일치
+        driver-class-name: com.mysql.cj.jdbc.Driver
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL8Dialect

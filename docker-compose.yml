@@ -1,39 +1,39 @@
 version: '3.8' # Docker Compose 파일 버전 (3.8 이상 권장)
 
 services:
-  myapp: # 당신의 Spring Boot 애플리케이션 서비스
-    build:
-      context: . # Dockerfile이 위치한 경로 (현재 디렉토리)
-      dockerfile: Dockerfile # 사용할 Dockerfile 이름
-    ports:
-      - "5000:8080" # 호스트(로컬PC)의 80번 포트를 컨테이너의 8080번 포트에 연결
-      # 만약 localhost:5000으로 하고 싶다면 "- "5000:8080""으로 변경
-    environment: # 컨테이너 내부에서 사용할 환경 변수 (Spring Boot의 application.yml 설정 오버라이드)
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/mydb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul
-      SPRING_DATASOURCE_USERNAME: root # MySQL root 계정 이름
-      SPRING_DATASOURCE_PASSWORD: 1234 # MySQL root 계정 비밀번호 (docker-compose.yml의 MYSQL_ROOT_PASSWORD와 일치해야 함)
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_JPA_SHOW_SQL: true
-    depends_on: # 이 서비스가 시작되기 전에 다른 서비스가 특정 조건을 충족할 때까지 기다리도록 설정
-      db: # 'db' 서비스가 완전히 준비될 때까지 기다림
-        condition: service_healthy # db 서비스의 healthcheck가 'healthy' 상태가 될 때까지 기다림
+    myapp: # 당신의 Spring Boot 애플리케이션 서비스
+        build:
+            context: . # Dockerfile이 위치한 경로 (현재 디렉토리)
+            dockerfile: Dockerfile # 사용할 Dockerfile 이름
+        ports:
+            - "5000:8080" # 호스트(로컬PC)의 80번 포트를 컨테이너의 8080번 포트에 연결
+            # 만약 localhost:5000으로 하고 싶다면 "- "5000:8080""으로 변경
+        environment: # 컨테이너 내부에서 사용할 환경 변수 (Spring Boot의 application.yml 설정 오버라이드)
+            SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/mydb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul
+            SPRING_DATASOURCE_USERNAME: root # MySQL root 계정 이름
+            SPRING_DATASOURCE_PASSWORD: 1234 # MySQL root 계정 비밀번호 (docker-compose.yml의 MYSQL_ROOT_PASSWORD와 일치해야 함)
+            SPRING_JPA_HIBERNATE_DDL_AUTO: update
+            SPRING_JPA_SHOW_SQL: true
+        depends_on: # 이 서비스가 시작되기 전에 다른 서비스가 특정 조건을 충족할 때까지 기다리도록 설정
+            db: # 'db' 서비스가 완전히 준비될 때까지 기다림
+                condition: service_healthy # db 서비스의 healthcheck가 'healthy' 상태가 될 때까지 기다림
 
-  db: # MySQL 데이터베이스 서비스
-    image: mysql:8.0 # 사용할 MySQL 이미지 버전
-    ports:
-      - "3306:3306" # 호스트(로컬PC)의 3306번 포트를 컨테이너의 3306번 포트에 연결
-    environment: # MySQL 컨테이너의 초기 설정 환경 변수
-      MYSQL_ROOT_PASSWORD: 1234 # MySQL root 계정 비밀번호 (myapp 서비스와 일치해야 함)
-      MYSQL_DATABASE: mydb # 초기 생성될 데이터베이스 이름 (myapp 서비스와 일치해야 함)
-    volumes: # 데이터 지속성을 위한 볼륨 설정
-      - db_data:/var/lib/mysql # 호스트의 db_data 볼륨을 컨테이너의 /var/lib/mysql에 마운트
-    restart: unless-stopped # 컨테이너가 비정상 종료 시 재시작 (명령어로 중지했을 때는 재시작 안 함)
-    healthcheck: # MySQL 컨테이너의 상태를 주기적으로 확인하는 설정 (매우 중요!)
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p${MYSQL_ROOT_PASSWORD}"] # MySQL 서버에 ping 테스트
-      interval: 10s # 10초마다 상태 확인
-      timeout: 5s   # 응답을 기다리는 최대 시간 (5초)
-      retries: 5    # 상태 확인 실패 시 재시도 횟수 (5회)
-      start_period: 30s # 컨테이너 시작 후 이 시간 동안은 healthcheck 실패해도 재시도 횟수에 포함시키지 않음 (MySQL 초기화 시간 고려)
+    db: # MySQL 데이터베이스 서비스
+        image: mysql:8.0 # 사용할 MySQL 이미지 버전
+        ports:
+            - "3306:3306" # 호스트(로컬PC)의 3306번 포트를 컨테이너의 3306번 포트에 연결
+        environment: # MySQL 컨테이너의 초기 설정 환경 변수
+            MYSQL_ROOT_PASSWORD: 1234 # MySQL root 계정 비밀번호 (myapp 서비스와 일치해야 함)
+            MYSQL_DATABASE: mydb # 초기 생성될 데이터베이스 이름 (myapp 서비스와 일치해야 함)
+        volumes: # 데이터 지속성을 위한 볼륨 설정
+            - db_data:/var/lib/mysql # 호스트의 db_data 볼륨을 컨테이너의 /var/lib/mysql에 마운트
+        restart: unless-stopped # 컨테이너가 비정상 종료 시 재시작 (명령어로 중지했을 때는 재시작 안 함)
+        healthcheck: # MySQL 컨테이너의 상태를 주기적으로 확인하는 설정 (매우 중요!)
+            test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p${MYSQL_ROOT_PASSWORD}"] # MySQL 서버에 ping 테스트
+            interval: 10s # 10초마다 상태 확인
+            timeout: 5s   # 응답을 기다리는 최대 시간 (5초)
+            retries: 5    # 상태 확인 실패 시 재시도 횟수 (5회)
+            start_period: 30s # 컨테이너 시작 후 이 시간 동안은 healthcheck 실패해도 재시도 횟수에 포함시키지 않음 (MySQL 초기화 시간 고려)
 
 volumes: # Docker 볼륨 정의 (db_data 볼륨은 위의 db 서비스에서 사용)
-  db_data:
+    db_data:
