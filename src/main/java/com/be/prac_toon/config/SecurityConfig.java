@@ -1,5 +1,6 @@
 package com.be.prac_toon.config; // 패키지명은 당신의 프로젝트에 맞게 조정하세요.
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,8 +20,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 // 요청에 대한 접근 권한을 설정합니다.
                 .authorizeHttpRequests(authorize -> authorize
-                        // /api/register 경로는 인증 없이도 접근을 허용합니다.
-                        .requestMatchers("/api/register", "/api/login").permitAll() // 필요하다면 /api/login도 추가
+                        // Spring Boot가 정적 리소스(js, css, img)를 제공하는 모든 경로를 자동으로 파악하여 허용
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers(
+                                "/","/index.html",                 // 웰컴페이지 허용
+                                "/api/register", "/api/login").permitAll() // 필요하다면 /api/login도 추가
                         // 다른 모든 요청은 인증을 받아야 접근 가능합니다.
                         .anyRequest().authenticated()
                 );
