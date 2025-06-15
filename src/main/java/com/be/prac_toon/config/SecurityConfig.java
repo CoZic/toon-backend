@@ -23,7 +23,9 @@ public class SecurityConfig {
                         // Spring Boot가 정적 리소스(js, css, img)를 제공하는 모든 경로를 자동으로 파악하여 허용
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers(
-                                "/","/index.html",                 // 웰컴페이지 허용
+                                "/",
+                                "/index.html",                 // 웰컴페이지 허용
+                                "/api/hello",              // 프론트-백 API 연결 허용
                                 "/api/register", "/api/login").permitAll() // 필요하다면 /api/login도 추가
                         // 다른 모든 요청은 인증을 받아야 접근 가능합니다.
                         .anyRequest().authenticated()
