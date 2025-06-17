@@ -8,11 +8,19 @@ spring:
 
     jpa:
         hibernate:
+            # 'update' : 실행 시 없으면 자동으로 @Entity붙은 도메인 클래스명으로 테이블 생성(데이터 생성 X)
             ddl-auto: update
-        show-sql: true
+        show-sql: true          # 실행되는 SQL 쿼리를 로그에 표시
         properties:
             hibernate:
+                format_sql: true   # SQL 쿼리를 포맷하여 보기 좋게 출력
                 dialect: org.hibernate.dialect.MySQL8Dialect
+        defer-datasource-initialization: true   # 하이버네이트(JPA)의 DDL(테이블) 생성이 완료된 후, data.sql를 실행하도록 설정
+
+    # src/main/resources/경로에 data.sql이 있을 시 해당 파일의 SQL 구문이 자동으로 실행 ★★
+#    sql:
+#        init:
+#            mode: always
 
 logging:
     level:
