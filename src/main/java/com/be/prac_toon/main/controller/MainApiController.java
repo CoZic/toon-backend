@@ -24,6 +24,7 @@ public class MainApiController {
     }
 
 /*
+*/
     @GetMapping("/api/webtoons/popular")
     public List<MainWebtoonDto> getPopularWebtoons() {
         // 실제로는 DB에서 조회해야 할 데이터를 임시로 생성합니다.
@@ -34,7 +35,6 @@ public class MainApiController {
                 new MainWebtoonDto(9, "외모지상주의", "박태준", "https://via.placeholder.com/200x250.png?text=Webtoon+9"),
                 new MainWebtoonDto(10, "더 복서", "정지훈", "https://via.placeholder.com/200x250.png?text=Webtoon+10")
         );
-        return webtoons; // List<WebtoonDto> 객체는 자동으로 JSON 배열 형태로 변환되어 응답됩니다.
+        return webtoons;
     }
-*/
 }
