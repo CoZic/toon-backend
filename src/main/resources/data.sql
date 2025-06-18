@@ -12,10 +12,10 @@
 
 
 -- INSERT IGNORE : Primary Key가 중복될 경우, 에러를 발생시키지 않고 조용히 해당 INSERT를 무시합니다.
--- ★★★ MySQL/MariaDB에서만 사용 가능
+-- ★★★ MySQL/MariaDB에서만 사용 가능, 빌드 시 h2 데이터베이스를 사용하기 때문에 빌드 에러가 발생하여 사용안하게 수정
 
 -- 'today' 카테고리 데이터
-INSERT IGNORE INTO webtoon (title, author, thumbnail_url, category) VALUES
+INSERT INTO webtoon (title, author, thumbnail_url, category) VALUES
 ('나 혼자만 레벨업', '추공', 'https://via.placeholder.com/200x250.png?text=DB+Webtoon+1', 'today'),
 ('전지적 독자 시점', '싱숑', 'https://via.placeholder.com/200x250.png?text=DB+Webtoon+2', 'today'),
 ('화산귀환', '비가', 'https://via.placeholder.com/200x250.png?text=DB+Webtoon+3', 'today'),
@@ -24,7 +24,7 @@ INSERT IGNORE INTO webtoon (title, author, thumbnail_url, category) VALUES
 ;
 
 -- 'popular' 카테고리 데이터
-INSERT IGNORE INTO webtoon (title, author, thumbnail_url, category) VALUES
+INSERT INTO webtoon (title, author, thumbnail_url, category) VALUES
 ('알고있지만', '정서', 'https://via.placeholder.com/200x250.png?text=DB+Webtoon+8', 'popular'),
 ('유미의 세포들', '이동건', 'https://via.placeholder.com/200x250.png?text=DB+Webtoon+7', 'popular'),
 ('신의 탑', 'SIU', 'https://via.placeholder.com/200x250.png?text=DB+Webtoon+10', 'popular'),
