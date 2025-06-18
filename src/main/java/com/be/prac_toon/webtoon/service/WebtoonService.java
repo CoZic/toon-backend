@@ -30,7 +30,11 @@ public class WebtoonService {
 
         // 조회된 Entity 목록을 DTO 목록으로 변환하여 반환합니다.
         return webtoons.stream()
-                .map(webtoon -> new MainWebtoonListDto(webtoon.getId(), webtoon.getTitle(), webtoon.getAuthor(), webtoon.getThumbnailUrl()))
+                .map(webtoon ->
+                        new MainWebtoonListDto(
+                            webtoon.getId(), webtoon.getTitle(), webtoon.getAuthor(), webtoon.getThumbnailUrl()
+                        )
+                )
                 .collect(Collectors.toList());
     }
 
@@ -42,7 +46,11 @@ public class WebtoonService {
 
         // DTO 목록으로 변환하여 반환합니다.
         return webtoons.stream()
-                .map(webtoon -> new MainWebtoonListDto(webtoon.getId(), webtoon.getTitle(), webtoon.getAuthor(), webtoon.getThumbnailUrl()))
+                .map(webtoon ->
+                        new MainWebtoonListDto(
+                            webtoon.getId(), webtoon.getTitle(), webtoon.getAuthor(), webtoon.getThumbnailUrl()
+                        )
+                )
                 .collect(Collectors.toList());
     }
 
