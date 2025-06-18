@@ -15,12 +15,20 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
+        /*
         // 2. 외부(application.yml)에서 주입받은 uploadPath 변수를 사용하여 리소스 경로를 동적으로 설정합니다.
-        String resourcePath = "file:///" + uploadPath;
+            이미지 경로 요청이 /uploads/**로 들어오면, 실제 파일 시스템의 uploadPath 경로에서 해당 파일을 찾도록 설정합니다.
+                예시:
+                    uploadPath가 "/var/www/uploads/" 라면,
+                        요청 URL이 "/uploads/[image.jpg]"일 때,
+                        실제 파일 경로는 "/var/www/uploads/[image.jpg]"가 됩니다.
+         */
         String resourceUrlPath = "/uploads/**";
+        String resourcePath = "file:///" + uploadPath;
 
-        registry.addResourceHandler(uploadPath)
-                .addResourceLocations(resourcePath);
+        registry
+            .addResourceHandler(resourceUrlPath) // 리소스 URL 경로 설정
+            .addResourceLocations(resourcePath); // 리소스 파일이 실제로 저장된 경로 설정
     }
 
 
