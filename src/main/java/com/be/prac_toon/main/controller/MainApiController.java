@@ -14,6 +14,13 @@ public class MainApiController {
 
     private final WebtoonService webtoonService; // 서비스 계층 의존성 주입
 
+    @GetMapping("/api/webtoons/mainbanner")
+    public MainWebtoonListDto getMainbanner() {
+        // 실제로는 별도의 로직으로 추천 웹툰을 선정해야 하지만,
+        // 여기서는 간단히 '오늘의 업데이트' 첫 번째 웹툰을 반환하는 것으로 가정합니다.
+        return webtoonService.getTodayWebtoons().stream().findFirst().orElse(null);
+    }
+
     @GetMapping("/api/webtoons/today")
     public List<MainWebtoonListDto> getTodaysWebtoons() {
 
