@@ -9,6 +9,7 @@
 --)
 -- DROP TABLE webtoon;
 -- DELETE FROM webtoon;
+-- DELETE from webtoon where id in ('16', '17', '18', '19', '20');
 
 
 -- INSERT IGNORE : Primary Key가 중복될 경우, 에러를 발생시키지 않고 조용히 해당 INSERT를 무시합니다.
@@ -16,18 +17,18 @@
 
 -- 'today' 카테고리 데이터
 INSERT INTO webtoon (title, author, thumbnail_url, category) VALUES
-('나 혼자만 레벨업', '추공', 'https://via.placeholder.com/200x250.png?text=DB+Webtoon+1', 'today'),
-('전지적 독자 시점', '싱숑', 'https://via.placeholder.com/200x250.png?text=DB+Webtoon+2', 'today'),
-('화산귀환', '비가', 'https://via.placeholder.com/200x250.png?text=DB+Webtoon+3', 'today'),
-('세이렌', '설레다', 'https://via.placeholder.com/200x250.png?text=DB+Webtoon+4', 'today'),
-('입학용병', 'YC', 'https://via.placeholder.com/200x250.png?text=DB+Webtoon+5', 'today')
+('나 혼자만 레벨업', '추공', '/uploads/images/only-i-level-up.jfif', 'today'),
+('전지적 독자 시점', '싱숑', '/uploads/images/omniscient-reader.jpg', 'today'),
+('화산귀환', '비가', '/uploads/images/return-of-the-blossoming-blade.jpg', 'today'),
+('세이렌', '설레다', '/uploads/images/seiren.jfif', 'today'),
+('입학용병', 'YC', '/uploads/images/teenage-mercenary.jpg', 'today')
 ;
 
 -- 'popular' 카테고리 데이터
 INSERT INTO webtoon (title, author, thumbnail_url, category) VALUES
-('알고있지만', '정서', 'https://via.placeholder.com/200x250.png?text=DB+Webtoon+8', 'popular'),
-('유미의 세포들', '이동건', 'https://via.placeholder.com/200x250.png?text=DB+Webtoon+7', 'popular'),
-('신의 탑', 'SIU', 'https://via.placeholder.com/200x250.png?text=DB+Webtoon+10', 'popular'),
-('외모지상주의', '박태준', 'https://via.placeholder.com/200x250.png?text=DB+Webtoon+9', 'popular'),
-('더 복서', '정지훈', 'https://via.placeholder.com/200x250.png?text=DB+Webtoon+11', 'popular')
+('알고있지만', '정서', '/uploads/images/nevertheless.jpg', 'popular'),
+('유미의 세포들', '이동건', '/uploads/images/yumis-cells.jpg', 'popular'),
+('신의 탑', 'SIU', '/uploads/images/towerofgod.jpg', 'popular'),
+('외모지상주의', '박태준', '/uploads/images/looksim.jpg', 'popular'),
+('더 복서', '정지훈', '/uploads/images/the-boxer.jpg', 'popular')
 ;
