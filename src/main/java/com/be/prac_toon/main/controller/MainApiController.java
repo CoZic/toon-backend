@@ -1,19 +1,18 @@
 package com.be.prac_toon.main.controller;
 
 import com.be.prac_toon.main.dto.MainWebtoonListDto;
-import com.be.prac_toon.main.service.MainWebtoonService;
+import com.be.prac_toon.webtoon.service.WebtoonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.List;
 
-@RestController
-@RequiredArgsConstructor // 서비스 계층을 생성자 주입으로 받기 위해 추가
+@RestController             // 이 클래스가 REST API 컨트롤러임을 나타냅니다.
+@RequiredArgsConstructor    // 서비스 계층을 생성자 주입으로 받기 위해 추가
 public class MainApiController {
 
-    private final MainWebtoonService mainWebtoonService; // 서비스 계층 의존성 주입
+    private final WebtoonService webtoonService; // 서비스 계층 의존성 주입
 
     @GetMapping("/api/webtoons/today")
     public List<MainWebtoonListDto> getTodaysWebtoons() {
@@ -29,7 +28,7 @@ public class MainApiController {
         );
         */
 
-        List<MainWebtoonListDto> webtoons = mainWebtoonService.getTodayWebtoons();
+        List<MainWebtoonListDto> webtoons = webtoonService.getTodayWebtoons();
 
         return webtoons; // List<WebtoonDto> 객체는 자동으로 JSON 배열 형태로 변환되어 응답됩니다.
     }
@@ -50,7 +49,7 @@ public class MainApiController {
         );
         */
 
-        List<MainWebtoonListDto> webtoons = mainWebtoonService.getPopularWebtoons();
+        List<MainWebtoonListDto> webtoons = webtoonService.getPopularWebtoons();
 
         return webtoons;
     }
