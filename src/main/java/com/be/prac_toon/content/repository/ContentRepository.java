@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.util.List;
 
 // JpaRepository를 상속받으며, 첫 번째 제네릭에는 Entity 클래스, 두 번째에는 ID 필드의 타입을 지정합니다.
-public interface WebtoonRepository extends JpaRepository<Content, Long> {
+public interface ContentRepository extends JpaRepository<Content, Long> {
 
     /**
      *  연재 요일(serializationDay)을 기준으로 웹툰 목록을 찾는 메소드

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- *  메인 페이지 웹툰 목록을 위한 Entity 클래스입니다.
+ *  Webtoon 클래스는 웹툰 콘텐츠를 나타내는 JPA Entity입니다.
  */
 @Entity                     // 이 클래스가 데이터베이스 테이블과 매핑되는 JPA Entity임을 나타냅니다.
 @Table(name = "content")    // 이 Entity 클래스를 'webtoon'이라는 이름의 테이블에 매핑하라는 명시적인 설정
@@ -79,7 +79,7 @@ public class Content {
     @UpdateTimestamp
     private Instant updatedAt;
 
-    // '일'에 해당하는 Content이 '다'에 해당하는 Episode 목록을 가집니다.
+    // '일'에 해당하는 content이 '다'에 해당하는 Episode 목록을 가집니다.
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Episode> episodes = new ArrayList<>();
 

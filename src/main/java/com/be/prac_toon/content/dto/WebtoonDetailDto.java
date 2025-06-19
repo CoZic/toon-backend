@@ -4,7 +4,6 @@ import com.be.prac_toon.content.domain.Content;
 import lombok.Getter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 public class WebtoonDetailDto {

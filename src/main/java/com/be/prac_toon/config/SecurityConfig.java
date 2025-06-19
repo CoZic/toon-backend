@@ -25,7 +25,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/",
                                 "/index.html",                              // 웰컴페이지 허용
-                                "/api/hello", "/api/webtoons/**",           // 프론트-백 API 연결 허용
+                                "/api/**",
                                 "/uploads/**",                              // 업로드된 이미지 접근 허용
                                 "/api/register", "/api/login").permitAll()  // 필요하다면 /api/login도 추가
                         // 다른 모든 요청은 인증을 받아야 접근 가능합니다.
