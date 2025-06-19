@@ -1,0 +1,63 @@
+-- 참고사항
+-- INSERT IGNORE : Primary Key가 중복될 경우, 에러를 발생시키지 않고 조용히 해당 INSERT를 무시합니다.
+-- ★★★ MySQL/MariaDB에서만 사용 가능, 빌드 시 h2 데이터베이스를 사용하기 때문에 빌드 에러가 발생하여 사용안하게 수정
+
+-- =====================================================================================================================
+
+-- 데이터 초기화를 위해 기존 데이터 삭제 (외래 키 제약 조건 때문에 자식 테이블부터 삭제)
+-- DROP TABLE content;
+
+-- DELETE FROM content_serialization_day;
+-- DELETE FROM content;
+-- DELETE FROM users;
+
+-- 1. 테스트용 관리자(등록자) 계정 생성
+-- 이 유저의 id(1)가 content 테이블의 registrant_id에 사용됩니다.
+INSERT INTO user (user_id, email, password, nickname, status, provider, created_at) VALUES
+(1, 'admin@toonflix.com', 'password_placeholder', '관리자', 'ACTIVE', 'LOCAL', CURRENT_TIMESTAMP);
+
+
+-- 2. 콘텐츠 데이터 생성
+-- 기존의 'popular' 카테고리 웹툰들 -> view_count를 높게 설정
+-- 기존의 'today' 카테고리 웹툰들 -> serialization_day를 'THU'(목요일)로 설정
+-- '인기' 웹툰 (view_count가 높은 순서)
+-- '오늘의 업데이트' 웹툰
+INSERT INTO content (content_id, registrant_id, content_type, title, author, age_rating, description, thumbnail_url, view_count, like_count, created_at) VALUES
+-- '인기' 웹툰 (view_count가 높은 순서)
+(1, 1, 'WEBTOON', '나 혼자만 레벨업', '추공', 0,'세상 최약의 E급 헌터, 각성을 통해 최강의 헌터로 거듭난다!', '/uploads/images/thumbnail/content/only-i-level-up.jfif', 2520100, 150200, CURRENT_TIMESTAMP),
+(2, 1, 'WEBTOON', '전지적 독자 시점', '싱숑', 0,'오직 나만이 이 소설의 결말을 알고 있다. 살아남기 위한 처절한 생존기.', '/uploads/images/thumbnail/content/omniscient-reader.jpg', 2150300, 130100, CURRENT_TIMESTAMP),
+(3, 1, 'WEBTOON', '화산귀환', '비가', 0,'대 화산파 13대 제자.천하삼대검수 매화검존 청명.
+                                   천하를 혼란에 빠뜨린 고금제일마 천마의 목을 치고 십만대산의 정상에서 영면.
+                                   백 년의 시간을 뛰어넘어 아이의 몸으로 다시 살아나다.
+                                   ......뭐? 화산이 망해? 이게 뭔 개소리야!?', '/uploads/images/thumbnail/content/return-of-the-blossoming-blade.jpg', 1895600, 115800, CURRENT_TIMESTAMP),
+(4, 1, 'WEBTOON', '신의 탑', 'SIU', 0,'자신의 모든 것이었던 소녀를 쫓아 탑에 들어온 소년. 탑의 끝에는 무엇이 있을까?', '/uploads/images/thumbnail/content/towerofgod.jpg', 1754200, 98500, CURRENT_TIMESTAMP),
+(5, 1, 'WEBTOON', '외모지상주의', '박태준', 0,'못생기고 뚱뚱한 왕따, 어느 날 그에게 찾아온 또 하나의 완벽한 몸!', '/uploads/images/thumbnail/content/looksim.jpg', 1688900, 95300, CURRENT_TIMESTAMP),
+(6, 1, 'WEBTOON', '세이렌', '설레다', 0,'아름다운 노래로 사람을 홀리는 세이렌, 그녀의 목소리가 세상을 뒤흔든다.', '/uploads/images/thumbnail/content/seiren.jfif', 897500, 56200, CURRENT_TIMESTAMP),
+(7, 1, 'WEBTOON', '더 복서', '정지훈', 0,'모든 것을 타고난 천재 복서의 압도적인 드라마.', '/uploads/images/thumbnail/content/the-boxer.jpg', 1105400, 78900, CURRENT_TIMESTAMP),
+(8, 1, 'WEBTOON', '알고있지만', '정서', 0,'사랑은 못 믿어도 연애는 하고 싶은 여자와 연애는 성가셔도 썸은 타고 싶은 남자의 로맨스.', '/uploads/images/thumbnail/content/nevertheless.jpg', 654300, 42100, CURRENT_TIMESTAMP),
+(9, 1, 'WEBTOON', '입학용병', 'YC', 0,'과거를 숨긴 채 고등학생이 된 최강의 용병! 학교 생활은 그에게 새로운 전장이 된다.', '/uploads/images/thumbnail/content/teenage-mercenary.jpg', 1321800, 85600, CURRENT_TIMESTAMP),
+(10, 1, 'WEBTOON', '유미의 세포들', '이동건', 0,'유미의 머릿속에서 벌어지는 유쾌하고 사랑스러운 세포들의 이야기.', '/uploads/images/thumbnail/content/yumis-cells.jpg', 1559100, 102300, CURRENT_TIMESTAMP)
+;
+
+-- 3. 콘텐츠-연재 요일 연결 데이터 생성
+-- content_id 1번 웹툰은 '수요일', '토요일' 연재
+INSERT INTO content_serialization_day (content_id, day_of_week) VALUES
+(1, 'MONDAY'), (1, 'TUESDAY'), (1, 'WEDNESDAY'), (1, 'THURSDAY'), (1, 'FRIDAY'), (1, 'SATURDAY'), (1, 'SUNDAY'),
+                               (2, 'WEDNESDAY'),                                                  (2, 'SUNDAY'),
+(3, 'MONDAY'),                                                    (3, 'FRIDAY'), (3, 'SATURDAY'),
+               (4, 'TUESDAY'),                   (4, 'THURSDAY'),                                 (4, 'SUNDAY'),
+(5, 'MONDAY'),                 (5, 'WEDNESDAY'),                                 (5, 'SATURDAY'), (5, 'SUNDAY'),
+               (6, 'TUESDAY'),                   (6, 'THURSDAY'), (6, 'FRIDAY'),
+(7, 'MONDAY'), (7, 'TUESDAY'),                   (7, 'THURSDAY'),                (7, 'SATURDAY'),
+               (8, 'TUESDAY'), (8, 'WEDNESDAY'),                  (8, 'FRIDAY'),
+                                                 (9, 'THURSDAY'),                (9, 'SATURDAY'),
+(10, 'MONDAY'),                (10, 'WEDNESDAY'),                 (10, 'FRIDAY'),                 (10, 'SUNDAY')
+;
+
+-- ==========================================================
+-- 4. 에피소드 데이터 생성 (화산귀환, content_id = 3)
+INSERT INTO episode (episode_id, content_id, episode_number, title, thumbnail_url, free, created_at) VALUES
+(1, 3, 1, '이게 무슨 망할 경우지?', '/uploads/images/thumbnail/episode/blade-ep1.jpg', true, '2025-06-05 10:00:00'),
+(2, 3, 2, '화산의 망령', '/uploads/images/thumbnail/episode/blade-ep2.jpg', true, '2025-06-12 10:00:00'),
+(3, 3, 3, '어린아이', '/uploads/images/thumbnail/episode/blade-ep3.jpg', false, '2025-06-19 10:00:00')
+;
