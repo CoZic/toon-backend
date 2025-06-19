@@ -1,7 +1,7 @@
 package com.be.prac_toon.main.controller;
 
 import com.be.prac_toon.main.dto.MainWebtoonListDto;
-import com.be.prac_toon.webtoon.service.WebtoonService;
+import com.be.prac_toon.content.service.WebtoonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +43,7 @@ public class MainApiController {
 */
 //   ===> RestFull API로 변경
 
+    // 메인페이지 웹툰 목록을 조회하는 API
     // RestFull API
     @GetMapping("/api/webtoons")
     public List<MainWebtoonListDto> getWebtoons(
