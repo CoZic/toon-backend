@@ -24,7 +24,7 @@ public class ContentApiController {
 
     // 메인 페이지용 API (이전 MainApiController의 내용)
     @GetMapping("/api/webtoons")
-    public List<WebtoonListDto> getMainWebtoons(@RequestParam String category) {
+    public List<WebtoonListDto> getMainWebtoons(@RequestParam(name = "category") String category) {
         log.info("API 요청 수신: /api/webtoons - category: {}", category);
 
         // 메인배너 요청
@@ -46,7 +46,7 @@ public class ContentApiController {
 
     // 웹툰 상세 페이지용 API
     @GetMapping("/api/webtoons/{webtoonId}")
-    public WebtoonDetailDto getContentById(@PathVariable() Long webtoonId) {
+    public WebtoonDetailDto getContentById(@PathVariable(name = "webtoonId") Long webtoonId) {
 
         ContentType type = contentServiceFactory.getContentTypeById(webtoonId);
 
@@ -59,7 +59,7 @@ public class ContentApiController {
 
     // 뷰어 페이지용 API
     @GetMapping("/api/episodes/{episodeId}")
-    public EpisodeViewerDto getEpisodeViewerById(@PathVariable Long episodeId) {
+    public EpisodeViewerDto getEpisodeViewerById(@PathVariable(name = "episodeId") Long episodeId) {
         // 뷰어는 특정 콘텐츠 타입에 종속되지 않으므로, 하나의 서비스에서 처리 가능
         // (실제로는 episodeId로 타입을 알아내서 맞는 서비스를 호출해야 함)
         ContentService service = contentServiceFactory.getService(ContentType.WEBTOON); // 임시로 웹툰 서비스 사용
