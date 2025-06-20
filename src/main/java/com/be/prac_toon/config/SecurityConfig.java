@@ -23,7 +23,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         // [추가] 좋아요(POST) API는 인증을 요구하도록 설정
                         // 이 규칙을 permitAll() 규칙보다 먼저 정의해야 합니다.
-                        .requestMatchers(HttpMethod.POST, "/api/episodes/*/like").authenticated()
+//                        .requestMatchers(HttpMethod.POST, "/api/episodes/*/like").authenticated()
                         // Spring Boot가 정적 리소스(js, css, img)를 제공하는 모든 경로를 자동으로 파악하여 허용
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers(

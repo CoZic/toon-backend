@@ -59,7 +59,9 @@ public class ContentApiController {
 
     // 뷰어 페이지용 API
     @GetMapping("/api/episodes/{episodeId}")
-    public EpisodeViewerDto getEpisodeViewerById(@PathVariable(name = "episodeId") Long episodeId) {
+    public EpisodeViewerDto getEpisodeViewerById(
+            @PathVariable(name = "episodeId") Long episodeId
+    ) {
         // 뷰어는 특정 콘텐츠 타입에 종속되지 않으므로, 하나의 서비스에서 처리 가능
         // (실제로는 episodeId로 타입을 알아내서 맞는 서비스를 호출해야 함)
         ContentService service = contentServiceFactory.getService(ContentType.WEBTOON); // 임시로 웹툰 서비스 사용

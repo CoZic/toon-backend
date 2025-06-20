@@ -24,6 +24,8 @@ public class EpisodeViewerDto {
         this.imageUrls = imageUrls;
         this.prevEpisodeId = prevEpisodeId;
         this.nextEpisodeId = nextEpisodeId;
+        this.likeCount = likeCount;
+        this.liked = liked;
     }
 
 }
