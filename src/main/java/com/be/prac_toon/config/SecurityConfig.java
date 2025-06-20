@@ -3,6 +3,7 @@ package com.be.prac_toon.config; // 패키지명은 당신의 프로젝트에 �
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -20,6 +21,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 // 요청에 대한 접근 권한을 설정합니다.
                 .authorizeHttpRequests(authorize -> authorize
+                        // [추가] 좋아요(POST) API는 인증을 요구하도록 설정
+                        // 이 규칙을 permitAll() 규칙보다 먼저 정의해야 합니다.
+                        .requestMatchers(HttpMethod.POST, "/api/episodes/*/like").authenticated()
                         // Spring Boot가 정적 리소스(js, css, img)를 제공하는 모든 경로를 자동으로 파악하여 허용
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers(

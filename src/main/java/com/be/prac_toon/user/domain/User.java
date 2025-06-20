@@ -1,6 +1,7 @@
 package com.be.prac_toon.user.domain;
 
 import com.be.prac_toon.content.domain.Content;
+import com.be.prac_toon.content.domain.EpisodeLike;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -8,7 +9,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /*
 @Entity // 이 클래스가 JPA 엔티티임을 나타냅니다.
@@ -134,6 +137,9 @@ public class User {
     // User(1)가 Content(N)를 등록하는 관계
     @OneToMany(mappedBy = "registrant")
     private List<Content> registeredContents = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<EpisodeLike> likes = new HashSet<>();
 
     @Builder
     public User(String email, String password, String nickname, String profileImageUrl, Provider provider, String providerId) {

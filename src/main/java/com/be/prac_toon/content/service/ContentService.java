@@ -4,6 +4,7 @@ import com.be.prac_toon.content.domain.*;
 import com.be.prac_toon.content.dto.EpisodeViewerDto;
 import com.be.prac_toon.content.dto.WebtoonListDto;
 import com.be.prac_toon.content.dto.WebtoonDetailDto;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -219,5 +220,5 @@ public interface ContentService {
 
     // 상세 및 뷰어 페이지용 API 로직
     WebtoonDetailDto getContentDetail(Long contentId);
-    EpisodeViewerDto getEpisodeViewer(Long episodeId);
+    EpisodeViewerDto getEpisodeViewer(Long episodeId, @Nullable Long currentUserId);
 }

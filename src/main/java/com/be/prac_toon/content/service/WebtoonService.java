@@ -6,7 +6,10 @@ import com.be.prac_toon.content.dto.EpisodeViewerDto;
 import com.be.prac_toon.content.dto.WebtoonDetailDto;
 import com.be.prac_toon.content.dto.WebtoonListDto;
 import com.be.prac_toon.content.repository.ContentRepository;
+import com.be.prac_toon.content.repository.EpisodeLikeRepository;
 import com.be.prac_toon.content.repository.EpisodeRepository;
+import com.be.prac_toon.user.domain.User;
+import com.be.prac_toon.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,8 +26,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor        // final로 선언된 필드에 대한 생성자를 자동으로 만들어줍니다. (생성자 주입)
 public class WebtoonService implements ContentService {
 
+    private final UserRepository userRepository;
     private final ContentRepository contentRepository;
     private final EpisodeRepository episodeRepository;
+    private final EpisodeLikeRepository episodeLikeRepository;
 
     @Override
     public ContentType getSupportContentType() {
@@ -133,7 +138,7 @@ public class WebtoonService implements ContentService {
 
     // 에피소드 뷰어 정보(웹툰 이미지)를 조회
     @Override
-    public EpisodeViewerDto getEpisodeViewer(Long episodeId) {
+    public EpisodeViewerDto getEpisodeViewer(Long episodeId, Long currentUserId) {
 
         // 1. 요청된 에피소드를 DB에서 찾음
         Episode currentEpisode = episodeRepository.findById(episodeId)
@@ -183,14 +188,35 @@ public class WebtoonService implements ContentService {
                 .map(EpisodeImage::getImageUrl)
                 .collect(Collectors.toList());
 
+        // 현재 사용자가 이 에피소드에 좋아요를 눌렀는지 확인
+        boolean isLikedByCurrentUser = false;
+
+        // 1. currentUserId가 null이 아닐 때만 DB를 조회합니다.
+        if (currentUserId != null) {
+
+            // 2. 사용자도 DB에 실제로 존재하는지 확인합니다.
+            userRepository.findById(currentUserId).ifPresent(user -> {
+                // isLikedByCurrentUser는 user 변수를 직접 참조할 수 없어,
+                // 아래처럼 별도의 변수에 결과를 할당하는 것이 일반적이지만,
+                // 여기서는 바로 확인하고 결과를 boolean 변수에 할당하는 것이 더 간결합니다.
+            });
+
+            // ifPresent는 결과가 없을 때 아무것도 하지 않으므로, 아래처럼 별도로 처리합니다.
+            isLikedByCurrentUser = userRepository.findById(currentUserId)
+                    .flatMap(user -> episodeLikeRepository.findByUserAndEpisode(user, currentEpisode))
+                    .isPresent();
+        }
+
         // 5. 최종 뷰어 DTO를 만들어 반환
         return new EpisodeViewerDto(
                 currentEpisode.getEpisodeId(),
-                parentContent.getTitle(),
+                currentEpisode.getContent().getTitle(),
                 currentEpisode.getEpisodeNumber() + "화. " + currentEpisode.getTitle(),
                 imageUrls,
                 prevEpisodeId,
-                nextEpisodeId
+                nextEpisodeId,
+                currentEpisode.getLikeCount(), // 총 좋아요 수
+                isLikedByCurrentUser           // 현재 사용자의 좋아요 여부
         );
     }
 }

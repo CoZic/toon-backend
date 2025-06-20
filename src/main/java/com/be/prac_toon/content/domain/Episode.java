@@ -8,7 +8,9 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity                                             // 이 클래스가 데이터베이스 테이블과 매핑되는 JPA Entity임을 나타냅니다.
 @Getter
@@ -45,5 +47,26 @@ public class Episode {
     */
     @OneToMany(mappedBy = "episode", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<EpisodeImage> episodeImages = new ArrayList<>();
+
+
+
+
+    @Column(nullable = false)
+    private int likeCount = 0; // 좋아요 총 수를 저장할 컬럼, 기본값 0
+
+    @OneToMany(mappedBy = "episode", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EpisodeLike> likes = new HashSet<>();
+
+    // 좋아요 수를 안전하게 증가시키는 편의 메소드
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    // 좋아요 수를 안전하게 감소시키는 편의 메소드
+    public void decreaseLikeCount() {
+        if (this.likeCount > 0) {
+            this.likeCount--;
+        }
+    }
 
 }
