@@ -220,5 +220,5 @@ public interface ContentService {
 
     // 상세 및 뷰어 페이지용 API 로직
     WebtoonDetailDto getContentDetail(Long contentId);
-    EpisodeViewerDto getEpisodeViewer(Long episodeId, @Nullable Long currentUserId);
+    EpisodeViewerDto getEpisodeViewer(Long episodeId, Long currentUserId);
 }

@@ -8,7 +8,6 @@ import com.be.prac_toon.content.dto.WebtoonListDto;
 import com.be.prac_toon.content.repository.ContentRepository;
 import com.be.prac_toon.content.repository.EpisodeLikeRepository;
 import com.be.prac_toon.content.repository.EpisodeRepository;
-import com.be.prac_toon.user.domain.User;
 import com.be.prac_toon.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -143,9 +142,12 @@ public class WebtoonService implements ContentService {
         // 1. 요청된 에피소드를 DB에서 찾음
         Episode currentEpisode = episodeRepository.findById(episodeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 에피소드를 찾을 수 없습니다. id=" + episodeId));
+        log.info("에피소드 뷰어(currentEpisode) 조회: episodeId={}, title={}", currentEpisode.getEpisodeId(), currentEpisode.getTitle());
 
         // 2. 부모 웹툰(Content)을 찾고, 해당 웹툰의 모든 에피소드를 회차순으로 정렬
         Content parentContent = currentEpisode.getContent();
+        log.info("부모 웹툰(parentContent) 조회: parentContent={}", parentContent);
+
         List<Episode> allEpisodes = parentContent.getEpisodes().stream()
                 .sorted(Comparator.comparingInt(Episode::getEpisodeNumber))
                 .toList();

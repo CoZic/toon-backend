@@ -16,10 +16,10 @@ import java.util.List;
 import java.util.Set;
 
 /**
- *  Webtoon 클래스는 웹툰 콘텐츠를 나타내는 JPA Entity입니다.
+ *  Content 클래스는 웹툰 콘텐츠를 나타내는 JPA Entity입니다.
  */
 @Entity                     // 이 클래스가 데이터베이스 테이블과 매핑되는 JPA Entity임을 나타냅니다.
-@Table(name = "content")    // 이 Entity 클래스를 'webtoon'이라는 이름의 테이블에 매핑하라는 명시적인 설정
+@Table(name = "content")    // 이 Entity 클래스를 'Content'이라는 이름의 테이블에 매핑하라는 명시적인 설정
 @Getter                     // 모든 필드에 대한 Getter 메소드를 자동으로 생성합니다.
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 파라미터 없는 기본 생성자를 보호된 접근 수준으로 생성합니다.
 public class Content {
