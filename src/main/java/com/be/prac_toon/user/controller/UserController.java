@@ -1,15 +1,22 @@
 package com.be.prac_toon.user.controller;
 
+import com.be.prac_toon.user.dto.UserLoginRequest;
 import com.be.prac_toon.user.service.UserService;
 import com.be.prac_toon.user.domain.User;
 import com.be.prac_toon.user.dto.UserRegistrationRequest; // 새로 만든 DTO 임포트
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api") // 이 컨트롤러의 모든 엔드포인트는 "/api"로 시작합니다.
 public class UserController {
+
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService; // UserService는 User 엔티티를 다룸
 
@@ -43,22 +50,27 @@ public class UserController {
         }
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody UserLoginRequest loginRequest) {
 
-    // 기존 User 생성 (예: 관리자용 또는 다른 목적)
-    // 이 엔드포인트는 Vue의 회원가입 페이지에서 사용되지 않습니다.
-    // 필요하다면 @RequestMapping을 변경하거나 별도의 DTO를 사용하는 것이 좋습니다.
-    @PostMapping("/users") // 기존 "/api/users" POST
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        // 이 메서드는 직접 User 엔티티를 받는 경우에만 사용합니다.
-        // 예를 들어 관리자가 직접 사용자를 추가하는 경우 등.
-        User savedUser = userService.saveUser(user);
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED); // 201 Created 응답
+        log.info("로그인 컨트롤러 진입 - email: {}", loginRequest.getEmail());
+
+        if (loginRequest.getEmail() == null || loginRequest.getPassword() == null) {
+            return new ResponseEntity<>("이메일과 비밀번호를 입력해주세요.", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            String token = userService.loginAndGetToken(
+                    loginRequest.getEmail(),
+                    loginRequest.getPassword()
+            );
+
+            return ResponseEntity.ok().body(Map.of("token", token)); // {"token": "..."}
+
+        } catch (Exception e) {
+            return new ResponseEntity<>("로그인 실패: " + e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
     }
 
-    // GET 요청을 처리하여 모든 User 목록을 조회합니다.
-    @GetMapping("/users") // 기존 "/api/users" GET
-    public ResponseEntity<Iterable<User>> getAllUsers() {
-        Iterable<User> users = userService.getAllUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK); // 200 OK 응답
-    }
+
 }

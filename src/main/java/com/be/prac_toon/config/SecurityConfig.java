@@ -8,6 +8,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer; // 람다식 설정을 위한 임포트
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity // Spring Security를 활성화합니다.
@@ -19,6 +24,7 @@ public class SecurityConfig {
                 // CSRF 보호를 비활성화합니다. 개발 단계에서 편리하지만,
                 // 실제 서비스에서는 적절한 CSRF 방어 전략을 사용해야 합니다.
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(withDefaults()) // <-- 이거 꼭 추가
                 // 요청에 대한 접근 권한을 설정합니다.
                 .authorizeHttpRequests(authorize -> authorize
                         // [추가] 좋아요(POST) API는 인증을 요구하도록 설정
@@ -26,6 +32,7 @@ public class SecurityConfig {
 //                        .requestMatchers(HttpMethod.POST, "/api/episodes/*/like").authenticated()
                         // Spring Boot가 정적 리소스(js, css, img)를 제공하는 모든 경로를 자동으로 파악하여 허용
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(
                                 "/",
                                 "/index.html",                              // 웰컴페이지 허용
@@ -40,4 +47,18 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:3000"); // 프론트 주소
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true); // withCredentials: true 쓸 경우 필요
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
 }

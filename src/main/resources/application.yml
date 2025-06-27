@@ -41,7 +41,7 @@ server:
 # 이 부분은 각 개발자가 자신의 PC 환경에 맞게 수정하여 사용합니다.
 custom:
     # Windows 사용자 예시:
-    upload-path: C:/Devel/prac_toon/uploads/
+    upload-path: C:/workspace/toonflix/
     # macOS 또는 Linux 사용자 예시 (필요시 주석 해제 후 사용):
     # upload-path: /Users/YourUsername/toon_uploads/
 # ============================ ===========================

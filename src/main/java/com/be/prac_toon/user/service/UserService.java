@@ -3,9 +3,12 @@ package com.be.prac_toon.user.service;
 import com.be.prac_toon.user.domain.Provider;
 import com.be.prac_toon.user.domain.User;
 import com.be.prac_toon.user.repository.UserRepository;
+import com.be.prac_toon.util.JwtUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder; // 비밀번호 암호화를 위해 추가 (아래 설명 참조)
+
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -62,5 +65,20 @@ public class UserService {
     // 모든 사용자 조회 (예시)
     public Iterable<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+
+    public String loginAndGetToken(String email, String password) {
+        // Optional에서 User 객체 추출 (없으면 예외 던짐)
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("이메일이 존재하지 않습니다."));
+
+        // 비밀번호 일치 여부 확인
+        if (!user.getPassword().equals(password)) {
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+        }
+
+        // JWT 토큰 발급
+        return JwtUtil.generateToken(user.getEmail());
     }
 }

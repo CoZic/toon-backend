@@ -8,10 +8,9 @@ import java.util.Optional; // Optional 임포트
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    // 사용자 이름으로 User를 찾는 메서드 (중복 검사에 사용)
-//    Optional<User> findByUsername(String username);
+    // 닉네임 중복 검사용
     Optional<User> findByNickname(String nickname);
 
-    // 이메일로 User를 찾는 메서드 (중복 검사에 사용)
+    // 이메일로 로그인 및 중복 검사
     Optional<User> findByEmail(String email);
 }
