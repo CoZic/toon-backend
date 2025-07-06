@@ -4,12 +4,14 @@ import com.be.prac_toon.user.dto.UserLoginRequest;
 import com.be.prac_toon.user.service.UserService;
 import com.be.prac_toon.user.domain.User;
 import com.be.prac_toon.user.dto.UserRegistrationRequest; // 새로 만든 DTO 임포트
+import com.be.prac_toon.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -20,8 +22,11 @@ public class UserController {
 
     private final UserService userService; // UserService는 User 엔티티를 다룸
 
-    public UserController(UserService userService) {
+    private final JwtUtil jwtUtil;
+
+    public UserController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     // 회원가입 엔드포인트 (Vue에서 "/api/register"로 요청 보낼 예정)
@@ -69,6 +74,34 @@ public class UserController {
 
         } catch (Exception e) {
             return new ResponseEntity<>("로그인 실패: " + e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @GetMapping("/user-info")
+    public ResponseEntity<?> getUserInfo(@RequestHeader("Authorization") String authHeader) {
+        try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 Authorization 헤더입니다.");
+            }
+
+            String token = authHeader.substring(7); // "Bearer " 제거
+            String email = jwtUtil.getSubject(token); // 토큰에서 이메일 추출
+
+            User user = userService.findByEmail(email); // 사용자 조회 (직접 만든 서비스 메서드)
+
+            log.info("내 정보 확인 용!  - : {}", user.getId() + user.getEmail());
+
+            Map<String, Object> userInfo = new HashMap<>();
+            userInfo.put("email", user.getEmail());
+            userInfo.put("username", user.getNickname());
+            userInfo.put("providerId", user.getProviderId());
+            userInfo.put("profileImageUrl", user.getProfileImageUrl());
+            userInfo.put("status", user.getStatus());
+
+            return ResponseEntity.ok(userInfo);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
         }
     }
 

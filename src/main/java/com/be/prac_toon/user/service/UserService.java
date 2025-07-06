@@ -15,19 +15,18 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder; // 비밀번호 암호화 빈 주입
+    private final JwtUtil jwtUtil;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     // 신규 회원가입 처리 메서드
     @Transactional
     public User registerNewUser(String username, String email, String plainPassword) {
         // 1. 아이디 또는 이메일 중복 검사 (예시)
-//        if (userRepository.findByUsername(username).isPresent()) {
-//            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
-//        }
         if (userRepository.findByNickname(username).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
         }
@@ -36,12 +35,6 @@ public class UserService {
         }
 
         // 2. User 엔티티 생성 및 비밀번호 암호화
-    /*
-        User newUser = new User();
-        newUser.setUsername(username);
-        newUser.setEmail(email);
-        newUser.setPassword(passwordEncoder.encode(plainPassword)); // 중요: 비밀번호 암호화
-    */
         User newUser = User.builder()
                 .nickname(username)
                 .email(email)
@@ -56,9 +49,7 @@ public class UserService {
 
     @Transactional // 메서드 실행 중 트랜잭션을 관리합니다.
     public User saveUser(User user) {
-        // 이 메서드는 DTO 없이 User 엔티티를 직접 저장할 때 사용합니다.
-        // 비밀번호가 이미 암호화되어있다고 가정하거나, 이전에 암호화 로직을 수행해야 합니다.
-        // registerNewUser와 역할이 겹칠 수 있으니 적절히 사용하거나 통합하세요.
+
         return userRepository.save(user); // User 정보를 데이터베이스에 저장합니다.
     }
 
@@ -68,17 +59,22 @@ public class UserService {
     }
 
 
-    public String loginAndGetToken(String email, String password) {
+    public String loginAndGetToken(String email, String plainPassword) {
         // Optional에서 User 객체 추출 (없으면 예외 던짐)
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("이메일이 존재하지 않습니다."));
 
         // 비밀번호 일치 여부 확인
-        if (!user.getPassword().equals(password)) {
+        if (!passwordEncoder.matches(plainPassword, user.getPassword())) {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 
         // JWT 토큰 발급
-        return JwtUtil.generateToken(user.getEmail());
+        return jwtUtil.generateToken(user.getEmail());
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
 }
